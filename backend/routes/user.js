@@ -14,7 +14,7 @@ const signupSchema = zod.object({
 })
 
 const signinSchema = zod.object({
-    username: zod.string().email(),
+    username: zod.string(),
 	password: zod.string()
 })
 
@@ -39,7 +39,7 @@ router.post("/signup", async (req, res)=>{
         username: body.username,
     })
 
-    if(user._id){
+    if(user){
         return res.json({
             message: "email already taken"
         })
@@ -64,7 +64,7 @@ router.post("/signup", async (req, res)=>{
     })
 })
 
-router.post("signin",async (req, res)=>{
+router.post("/signin",async (req, res)=>{
     const body = req.body;
 
     const {success} = signinSchema.safeParse(body);
@@ -82,7 +82,7 @@ router.post("signin",async (req, res)=>{
 
     if(user){
         const token = jwt.sign({
-            userId: body._id
+            userId: user._id
         }, jwt_token);
 
         return res.json({
@@ -116,11 +116,11 @@ router.get("/bulk", async (req, res) => {
 
     const users = await User.find({
         $or: [{
-            firstName: {
+            firstname: {
                 "$regex": filter
             }
         }, {
-            lastName: {
+            lastname: {
                 "$regex": filter
             }
         }]
@@ -129,8 +129,8 @@ router.get("/bulk", async (req, res) => {
     res.json({
         user: users.map(user => ({
             username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            firstname: user.firstname,
+            lastname: user.lastname,
             _id: user._id
         }))
     })

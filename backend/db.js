@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
     lastname: String,
 })
 
-export const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
 const accountSchema = mongoose.Schema({
     userId: {
@@ -24,4 +24,9 @@ const accountSchema = mongoose.Schema({
     }
 });
 
-export const Account = mongoose.model("Account", accountSchema);
+const Account = mongoose.model("Account", accountSchema);
+
+module.exports = {
+    User,
+    Account
+}

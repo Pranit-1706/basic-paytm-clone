@@ -1,7 +1,7 @@
-import { jwt_token } from "./config";
+const { jwt_token } = require("./config");
+const jwt = require("jsonwebtoken");
 
-
-export const authMiddleware = (req, res, next)=>{
+const authMiddleware = (req, res, next)=>{
     const authHeader = req.headers.authorization;
 
     if(!authHeader || !authHeader.startsWith('Bearer ')){
@@ -11,7 +11,7 @@ export const authMiddleware = (req, res, next)=>{
     }
 
     const token = authHeader.split(' ')[1];
-
+    // console.log(token);
     try{
         const decoded = jwt.verify(token, jwt_token);
 
@@ -22,6 +22,8 @@ export const authMiddleware = (req, res, next)=>{
             return res.status(403).json({})
         }
     }catch(err){
-        return res.status(403).json({});
+        return res.status(400).json({});
     }
 };
+
+module.exports = {authMiddleware};
