@@ -6,7 +6,7 @@ import { Appbar } from "../components/AppBar";
 
 export const Dashboard = () => {
   const [amount, setAmount] = useState(null);
-
+  const [currentUser, setCurrentUser] = useState(null);
   useEffect(() => {
     axios.get("http://localhost:3000/api/v1/account/balance", {
         headers: {
@@ -15,6 +15,7 @@ export const Dashboard = () => {
         })
       .then(response => {
         setAmount(response.data.message);
+        setCurrentUser(response.data.userId);
       })
       .catch(err => {
         console.error("Error fetching balance:", err);
@@ -26,7 +27,7 @@ export const Dashboard = () => {
       <Appbar />
       <div className="m-6">
         <Balance value={amount} />
-        <Users />
+        <Users currentUser={currentUser} />
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
-import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const SendMoney = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const userId = location.state?.userId;
     const firstname = location.state?.firstname || "Unknown";
@@ -35,9 +37,24 @@ export const SendMoney = () => {
                         placeholder="Enter amount"
                     />
                     </div>
-                    <button onClick={()=>{
-                        
-                    }} class="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
+                    <button onClick={async()=>{
+                        try{
+                            const response =await axios.post("http://localhost:3000/api/v1/account/transfer", {
+                                to:userId,
+                                amount: parseInt(document.getElementById("amount").value),
+                            },{
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem("token")}`, // or where you stored it
+                                },
+                            });
+                            alert(response.data.message );
+                            navigate("/dashboard");
+                        }
+                        catch(response){
+                            alert(response.response.data.message );
+                        }
+                        console.log(response);
+                    }} className="cursor-pointer justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
                         Initiate Transfer
                     </button>
                 </div>
